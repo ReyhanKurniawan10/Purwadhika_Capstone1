@@ -35,330 +35,7 @@ def menu():
           6. Data Pelanggan dan Data Peminjaman
           7. Keluar dari program''')
 
-def menuTambahMobil():
-    global listData
-    flag = 0
-    while flag != 1:
-        merkMobil = input('Masukkan merk mobil yang ingin ditambahkan : ')
-        namaMobil = input('Masukkan nama mobil yang ingin ditambahkan : ')
-        tahunMobil = inputanTahunMobil()
-        duplikasiPlat = 0
-        platMobil = ''
-        statusMobil = ''
-        while True:
-            platMobil = inputanPlatMobil()
-            duplikasiPlat = cekDuplikasiPlat(platMobil)
-            if(duplikasiPlat == 1):
-                break
-        while True:
-            hargaSewaMobil = input('Masukkan harga sewa mobil perhari yang ingin ditambahkan : ')
-            if(hargaSewaMobil.isdigit()):
-                break
-            else:
-                print('Maaf, data harga yang anda masukkan tidak sesuai')
-            hargaSewaMobilINT = int(hargaSewaMobil)
-        statusMobil = 'Tersedia'
-        newList = [merkMobil, namaMobil, tahunMobil, platMobil, hargaSewaMobil, statusMobil]
-        print('Merk\t|Nama\t|Tahun\t|Plat\t\t|Harga Sewa/Hari\t|Status')
-        print(f'{newList[0]}\t|{newList[1]}\t|{newList[2]}\t|{newList[3]}\t|{newList[4]}\t\t\t|{newList[5]}')
-        while True:
-            validasiInput = input('Apakah data yang anda masukkan sudah benar? [ya / tidak] : ')
-            validasiInputLower = validasiInput.lower()
-            if(validasiInputLower == 'ya'):
-                listData.append(newList)
-                flag = 1
-                break
-            elif(validasiInputLower == 'tidak'):
-                flag1 = 0
-                while True:
-                    validasiInputUlang = input('Apakah anda ingin melakukan input ulang? [ya / tidak] : ')
-                    validasiInputUlangLower = validasiInputUlang.lower()
-                    if(validasiInputUlangLower == 'ya'):
-                        flag1 = 1
-                        break
-                    elif(validasiInputUlangLower == 'tidak'):
-                        flag1 = 1
-                        flag = 1
-                        break
-                    else:
-                        print('Maaf, inputan yang anda masukkan tidak sesuai dengan yang diminta, silahkan input lagi!')
-                if(flag1 == 1):
-                    break
-            else :
-                print('Maaf, inputan yang anda masukkan tidak sesuai dengan yang diminta, silahkan input lagi!')
-
-def menuKe2():
-    while True:
-        flagKeluar = 0
-        hasil = 0
-        print('''\n---Tampilkan Data---
-              
-1. Menampilkan semua data
-2. Menampilkan data mobil berdasarkan plat mobil yang diinput
-3. Menampilkan data mobil berdasarkan index yang diinput
-4. Menampilkan semua mobil dengan merk yang diinput
-5. Menampilkan semua mobil dengan nama yang diinput
-6. Menampilkan semua mobil dengan tahun yang diinput
-7. Menampilkan semua mobil dengan status yang diinput
-8. Kembali ke menu utama''')
-        pilihan = input('Silahkan masukkan pilihan anda sesuai dengan angka yang dituju [1 - 8] : ')
-        if(pilihan == '1'):
-            tampilSemuaData()
-        elif(pilihan == '2'):
-            tampilDataBerdasarkanPlat()
-        elif(pilihan == '3'):
-            tampilDataBerdasarkanIndex()
-        elif(pilihan == '4'):
-            merkMobil = input('Masukkan merk mobil yang dicari : ')
-            merkMobilLower = merkMobil.lower()
-            tampilDataMobilDenganMerkYangSama(merkMobilLower)
-        elif(pilihan == '5'):
-            namaMobil = input('Masukkan nama mobil yang dicari : ')
-            namaMobilLower = namaMobil.lower()
-            tampilDataMobilDenganNamaYangSama(namaMobilLower)
-        elif(pilihan == '6'):
-            flag = 0
-            while True:
-                tahunMobil = input('Masukkan tahun mobil yang dicari : ')
-                if(tahunMobil.isdigit() and int(tahunMobil) > 1800 and int(tahunMobil) <= 2025):
-                    flag = 1
-                    break
-                else:
-                    print('Maaf, tahun yang anda masukkan tidak sesuai.')
-                    konfirmasiKeMenuUtama = input('Apakah anda ingin mencari lagi dengan tahun mobil? Jika tidak akan kembali ke menu utama. [ya / tidak] : ')
-                    konfirmasiKeMenuUtamaLower = konfirmasiKeMenuUtama.lower()
-                    if(konfirmasiKeMenuUtamaLower == 'ya'):
-                        break
-                    elif(konfirmasiKeMenuUtamaLower == 'tidak'):
-                        flagKeluar = 1
-                        break
-                    else:
-                        print('Maaf, inputan anda tidak sesuai')
-            if(flag == 1):
-                tampilDataMobilDenganTahunYangSama(tahunMobil)
-        elif(pilihan == '7'):
-            while True:
-                statusMobil = input('Status mobil yang dicari [Tersedia / Disewa] : ')
-                statusMobilLower = statusMobil.lower()
-                if(statusMobilLower == 'tersedia' or statusMobilLower == 'disewa'):
-                    tampilDataMobilDenganStatusYangSama(statusMobilLower)
-                    break
-                else:
-                    print('Maaf, status yang anda masukkan tidak sesuai.')
-        elif(pilihan == '8'):
-            break
-        else:
-            print('Maaf inputan yang anda masukkan tidak sesuai.')
-        if(flagKeluar == 1):
-            break
-
-def tampilDataMobilDenganMerkYangSama(merkMobil):
-    flag = 0
-    print('Index\t|Merk\t|Nama\t|Tahun\t|Plat\t\t|Harga Sewa/Hari\t|Status')
-    for i in range(len(listData)):
-        if(merkMobil == listData[i][0].lower()):
-            flag = 1
-            print(f'{i}\t|{listData[i][0]}\t|{listData[i][1]}\t|{listData[i][2]}\t|{listData[i][3]}\t|{listData[i][4]}\t\t\t|{listData[i][5]}')
-    if(flag == 0):
-        print(f'\nTidak ada data mobil dengan merk {merkMobil}.\n')
-
-def tampilDataMobilDenganNamaYangSama(namaMobil):
-    flag = 0
-    print('Index\t|Merk\t|Nama\t|Tahun\t|Plat\t\t|Harga Sewa/Hari\t|Status')
-    for i in range(len(listData)):
-        if(namaMobil == listData[i][1].lower()):
-            flag = 1
-            print(f'{i}\t|{listData[i][0]}\t|{listData[i][1]}\t|{listData[i][2]}\t|{listData[i][3]}\t|{listData[i][4]}\t\t\t|{listData[i][5]}')
-    if(flag == 0):
-        print(f'\nTidak ada data mobil dengan nama {namaMobil}.\n')
-
-def tampilDataMobilDenganTahunYangSama(tahunMobil):
-    flag = 0
-    print('Index\t|Merk\t|Nama\t|Tahun\t|Plat\t\t|Harga Sewa/Hari\t|Status')
-    for i in range(len(listData)):
-        if(tahunMobil == listData[i][2].lower()):
-            flag = 1
-            print(f'{i}\t|{listData[i][0]}\t|{listData[i][1]}\t|{listData[i][2]}\t|{listData[i][3]}\t|{listData[i][4]}\t\t\t|{listData[i][5]}')
-    if(flag == 0):
-        print(f'\nTidak ada data mobil dengan tahun {tahunMobil}.\n')
-
-def tampilDataMobilDenganStatusYangSama(statusMobil):
-    flag = 0
-    print('Index\t|Merk\t|Nama\t|Tahun\t|Plat\t\t|Harga Sewa/Hari\t|Status')
-    for i in range(len(listData)):
-        if(statusMobil == listData[i][5].lower()):
-            flag = 1
-            print(f'{i}\t|{listData[i][0]}\t|{listData[i][1]}\t|{listData[i][2]}\t|{listData[i][3]}\t|{listData[i][4]}\t\t\t|{listData[i][5]}')
-    if(flag == 0):
-        print(f'\nTidak ada data mobil dengan status {statusMobil}.\n')
-
-def tampilDataBerdasarkanIndex():
-    flag1 = 0
-    while True:
-        inputUlang = ''
-        indexCari = input('Masukkan index dari data yang ingin dilihat : ')
-        if(indexCari.isdigit() == True and int(indexCari) < len(listData)):
-            indexCariINT = int(indexCari)
-            print('Index\t|Merk\t|Nama\t|Tahun\t|Plat\t\t|Harga Sewa/Hari\t|Status')
-            print(f'{indexCariINT}\t|{listData[indexCariINT][0]}\t|{listData[indexCariINT][1]}\t|{listData[indexCariINT][2]}\t|{listData[indexCariINT][3]}\t|{listData[indexCariINT][4]}\t\t\t|{listData[indexCariINT][5]}')
-            break
-            # lihatLagi = input('Apakah anda ingin melihat data lagi? [ya/ tidak] : ')
-            # if(lihatLagi == 'tidak'):
-            #     flag2 = 1
-            #     break
-            # elif(lihatLagi == 'ya'):
-            #     break
-            # else:
-            #     print('Maaf inputan yang anda masukkan tidak sesuai.')
-        elif(indexCari.isdigit() == True and int(indexCari) >= len(listData)):
-            print('Maaf, data yang anda cari tidak ditemukan')
-            while True:
-                inputUlang = input('Apakah anda ingin mencari ulang? [ya / tidak] : ')
-                inputUlangLower = inputUlang.lower()
-                if(inputUlangLower == 'tidak'):
-                    flag1 = 1
-                    break
-                elif(inputUlangLower == 'ya'):
-                    break
-                else:
-                    print('Maaf inputan yang anda masukkan tidak sesuai.')
-            if(flag1 == 1):
-                break
-        else:
-            print('Maaf inputan yang anda masukkan tidak sesuai.')
-            # while True:
-            #     inputUlang = input('Apakah anda ingin mencari ulang? [ya / tidak] : ')
-            #     inputUlangLower = inputUlang.lower()
-            #     if(inputUlangLower == 'tidak'):
-            #         flag1 = 1
-            #         break
-            #     elif(inputUlangLower == 'ya'):
-            #         break
-            #     else:
-            #         print('Maaf inputan yang anda masukkan tidak sesuai.')
-            # if(flag1 == 1):
-            #     break
-
-def tampilDataBerdasarkanPlat():
-    flag = 0
-    flag1 = 0
-    inputUlang = ''
-    validasiPlatMobilTDBP = 0
-    lihatLagi = ''
-    while True:
-        platMobilTDBP = input('Masukkan plat mobil dari data yang ingin dilihat : ')
-        validasiPlatMobilTDBP = cekPlatMobilUpdt(platMobilTDBP)
-        if(validasiPlatMobilTDBP == 1):
-            for i in range(len(listData)):
-                if(platMobilTDBP == listData[i][3]):
-                    print('Index\t|Merk\t|Nama\t|Tahun\t|Plat\t\t|Harga Sewa/Hari\t|Status')
-                    print(f'{i}\t|{listData[i][0]}\t|{listData[i][1]}\t|{listData[i][2]}\t|{listData[i][3]}\t|{listData[i][4]}\t\t\t|{listData[i][5]}')
-                    flag = 1
-                    break
-            if(flag == 1):
-                break
-                # lihatLagi = input('Apakah anda ingin melihat data lagi? [ya / tidak] : ')
-                # if(lihatLagi == 'tidak'):
-                #     break
-                # elif(lihatLagi == 'ya'):
-                #     break
-                # else:
-                #     print('Maaf inputan yang anda masukkan tidak sesuai.')
-            else:
-                print('Maaf, data yang anda cari tidak ditemukan')
-                while True:
-                    inputUlang = input('Apakah anda ingin mencari ulang? [ya / tidak] : ')
-                    inputUlang.lower()
-                    if(inputUlang == 'tidak'):
-                        flag1 = 1
-                        break
-                    elif(inputUlang == 'ya'):
-                        break
-                    else:
-                        print('Maaf inputan yang anda masukkan tidak sesuai.')
-            if(flag1 == 1):
-                break
-
-def tampilSemuaData():
-    print('Index\t|Merk\t|Nama\t|Tahun\t|Plat\t\t|Harga Sewa/Hari\t|Status')
-    for i in range(len(listData)):
-        print(f'{i}\t|{listData[i][0]}\t|{listData[i][1]}\t|{listData[i][2]}\t|{listData[i][3]}\t|{listData[i][4]}\t\t\t|{listData[i][5]}')
-
-def inputanTahunMobil():
-    tahunMobilVIT = ''
-    while True:
-        tahunMobilVIT = input('Masukkan tahun mobil yang ingin ditambahkan : ')
-        panjangTahun = len(tahunMobilVIT)
-        if(panjangTahun == 4):
-            if(tahunMobilVIT.isdigit() == True):
-                cekTahun = int(tahunMobilVIT)
-                if(cekTahun > 1800 and cekTahun <= 2025):
-                    break
-                else:
-                    print('Maaf, data tahun yang anda masukkan tidak sesuai.')
-                    continue
-            else:
-                print('Maaf, data tahun yang anda masukkan tidak sesuai.')
-                continue
-        else:
-            print('Maaf, data tahun yang anda masukkan tidak sesuai.')
-    return tahunMobilVIT
-
-def inputanPlatMobil():
-    platMobilVIP = ''
-    while True:
-        platMobilVIP = input('Masukkan plat mobil yang ingin ditambahkan [cth : B 1234 CED] : ')
-        if(platMobilVIP[0:1].isalpha() and platMobilVIP[0:1].isupper() and platMobilVIP[1:2] == ' ' and len(platMobilVIP) <= 10):
-            if(platMobilVIP[2:6].isdigit()):
-                if(platMobilVIP[6:7] == ' ' and (platMobilVIP[7:].isalpha()) and (platMobilVIP[7:].isupper())):
-                    break
-                else:
-                    print('Maaf, plat mobil yang anda masukkan tidak sesuai dengan ketentuan')
-            elif(platMobilVIP[2:5].isdigit() and len(platMobilVIP) <= 9):
-                if(platMobilVIP[5:6] == ' ' and (platMobilVIP[6:].isalpha()) and (platMobilVIP[6:].isupper())):
-                    break
-                else:
-                    print('Maaf, plat mobil yang anda masukkan tidak sesuai dengan ketentuan')
-            elif(platMobilVIP[2:4].isdigit() and len(platMobilVIP) <= 8):
-                if(platMobilVIP[4:5] == ' ' and (platMobilVIP[5:].isalpha()) and (platMobilVIP[5:].isupper())):
-                    break
-                else:
-                    print('Maaf, plat mobil yang anda masukkan tidak sesuai dengan ketentuan')
-            elif(platMobilVIP[2:3].isdigit() and len(platMobilVIP) <= 7):
-                if(platMobilVIP[3:4] == ' ' and (platMobilVIP[4:].isalpha()) and (platMobilVIP[4:].isupper())):
-                    break
-                else:
-                    print('Maaf, plat mobil yang anda masukkan tidak sesuai dengan ketentuan')
-            else:
-                print('Maaf, plat mobil yang anda masukkan tidak sesuai dengan ketentuan')
-        elif(platMobilVIP[0:2].isalpha() and platMobilVIP[0:2].isupper() and platMobilVIP[2:3] == ' ' and len(platMobilVIP) <= 11):
-            if(platMobilVIP[3:7].isdigit()):
-                if(platMobilVIP[7:8] == ' ' and (platMobilVIP[8:].isalpha()) and (platMobilVIP[8:].isupper())):
-                    break
-                else:
-                    print('Maaf, plat mobil yang anda masukkan tidak sesuai dengan ketentuan')
-            elif(platMobilVIP[3:6].isdigit() and len(platMobilVIP) <= 10):
-                if(platMobilVIP[6:7] == ' ' and (platMobilVIP[7:].isalpha()) and (platMobilVIP[7:].isupper())):
-                    break
-                else:
-                    print('Maaf, plat mobil yang anda masukkan tidak sesuai dengan ketentuan')
-            elif(platMobilVIP[3:5].isdigit() and len(platMobilVIP) <= 9):
-                if(platMobilVIP[5:6] == ' ' and (platMobilVIP[6:].isalpha()) and (platMobilVIP[6:].isupper())):
-                    break
-                else:
-                    print('Maaf, plat mobil yang anda masukkan tidak sesuai dengan ketentuan')
-            elif(platMobilVIP[3:4].isdigit() and len(platMobilVIP) <= 8):
-                if(platMobilVIP[4:5] == ' ' and (platMobilVIP[5:].isalpha()) and (platMobilVIP[5:].isupper())):
-                    break
-                else:
-                    print('Maaf, plat mobil yang anda masukkan tidak sesuai dengan ketentuan')
-            else:
-                print('Maaf, plat mobil yang anda masukkan tidak sesuai dengan ketentuan')
-        else:
-            print('Maaf, plat mobil yang anda masukkan tidak sesuai dengan ketentuan')
-    return platMobilVIP
-
-def cekPlatMobilUpdt(platMobil):
+def cekInputanPlatMobil(platMobil):
     if(platMobil[0:1].isalpha() and platMobil[0:1].isupper() and platMobil[1:2] == ' ' and len(platMobil) <= 10):
         if(platMobil[2:6].isdigit()):
             if(platMobil[6:7] == ' ' and (platMobil[7:].isalpha()) and (platMobil[7:].isupper())):
@@ -420,100 +97,300 @@ def cekDuplikasiPlat(platMobil):
             break
     return flag
 
+def cekDuplikasiNoKTP(NoKTP):
+    flag = 1
+    for i in range(len(listDataCustomer)):
+        if(NoKTP == listDataCustomer[i][2]):
+            print(f'''
+Nama    : {listDataCustomer[i][0]}
+Alamat  : {listDataCustomer[i][1]}
+No KTP  : {listDataCustomer[i][2]}''')
+            print('Mohon maaf, terdapat kesamaan nomor KTP dengan data pelanggan tersebut.')
+            print('Jika terdapat kesalahan pada data pelanggan tersebut, mohon update atau delete data tersebut terlebih dahulu')
+            flag = 0
+            break
+    return flag
+
+# Menu 1
+def menuTambahMobil():
+    global listData
+    flag = 0
+    while flag != 1:
+        merkMobil = input('Masukkan merk mobil yang ingin ditambahkan : ')
+        namaMobil = input('Masukkan nama mobil yang ingin ditambahkan : ')
+        tahunMobil = inputanTahunMobil()
+        duplikasiPlat = 0
+        platMobil = ''
+        statusMobil = ''
+        while True:
+            platMobil = input('Masukkan plat mobil yang ingin ditambahkan [cth : B 1234 CED] : ')
+            hasilCekInputanPlat = cekInputanPlatMobil(platMobil)
+            if(hasilCekInputanPlat == 1):
+                duplikasiPlat = cekDuplikasiPlat(platMobil)
+                if(duplikasiPlat == 1):
+                    break
+        while True:
+            hargaSewaMobil = input('Masukkan harga sewa mobil perhari yang ingin ditambahkan : ')
+            if(hargaSewaMobil.isdigit()):
+                break
+            else:
+                print('Maaf, data harga yang anda masukkan tidak sesuai')
+        statusMobil = 'Tersedia'
+        newList = [merkMobil, namaMobil, tahunMobil, platMobil, hargaSewaMobil, statusMobil]
+        print(f'{'Merk':<15}|{'Nama':<15}|{'Tahun'}\t|{'Plat':<11}|{'Harga Sewa/Hari':<10}|{'Status'}')
+        print(f'{newList[0]:<15}|{newList[1]:<15}|{newList[2]}\t|{newList[3]:<11}|{newList[4]:<10}|{newList[5]}')
+        while True:
+            validasiInput = input('Apakah data yang anda masukkan sudah benar? [ya / tidak] : ')
+            validasiInputLower = validasiInput.lower()
+            if(validasiInputLower == 'ya'):
+                listData.append(newList)
+                flag = 1
+                break
+            elif(validasiInputLower == 'tidak'):
+                flag1 = 0
+                while True:
+                    validasiInputUlang = input('Apakah anda ingin melakukan input ulang? [ya / tidak] : ')
+                    validasiInputUlangLower = validasiInputUlang.lower()
+                    if(validasiInputUlangLower == 'ya'):
+                        flag1 = 1
+                        break
+                    elif(validasiInputUlangLower == 'tidak'):
+                        flag1 = 1
+                        flag = 1
+                        break
+                    else:
+                        print('Maaf, inputan yang anda masukkan tidak sesuai dengan yang diminta, silahkan input lagi!')
+                if(flag1 == 1):
+                    break
+            else :
+                print('Maaf, inputan yang anda masukkan tidak sesuai dengan yang diminta, silahkan input lagi!')
+
+def inputanTahunMobil():
+    tahunMobilVIT = ''
+    while True:
+        tahunMobilVIT = input('Masukkan tahun mobil yang ingin ditambahkan : ')
+        panjangTahun = len(tahunMobilVIT)
+        if(panjangTahun == 4):
+            if(tahunMobilVIT.isdigit() == True):
+                cekTahun = int(tahunMobilVIT)
+                if(cekTahun > 1800 and cekTahun <= 2025):
+                    break
+                else:
+                    print('Maaf, data tahun yang anda masukkan tidak sesuai.')
+                    continue
+            else:
+                print('Maaf, data tahun yang anda masukkan tidak sesuai.')
+                continue
+        else:
+            print('Maaf, data tahun yang anda masukkan tidak sesuai.')
+    return tahunMobilVIT
+# =========================================================================
+
+# Menu 2
+def menuKe2():
+    while True:
+        flagKeluar = 0
+        print('''\n---Tampilkan Data---
+              
+1. Menampilkan semua data
+2. Menampilkan data mobil berdasarkan plat mobil yang diinput
+3. Menampilkan data mobil berdasarkan index yang diinput
+4. Menampilkan semua mobil dengan merk yang diinput
+5. Menampilkan semua mobil dengan nama yang diinput
+6. Menampilkan semua mobil dengan tahun yang diinput
+7. Menampilkan semua mobil dengan status yang diinput
+8. Kembali ke menu utama''')
+        pilihan = input('Silahkan masukkan pilihan anda sesuai dengan angka yang dituju [1 - 8] : ')
+        if(pilihan == '1'):
+            tampilSemuaData()
+        elif(pilihan == '2'):
+            tampilDataBerdasarkanPlat()
+        elif(pilihan == '3'):
+            tampilDataBerdasarkanIndex()
+        elif(pilihan == '4'):
+            merkMobil = input('Masukkan merk mobil yang dicari : ')
+            tampilDataMobilDenganMerkYangSama(merkMobil)
+        elif(pilihan == '5'):
+            namaMobil = input('Masukkan nama mobil yang dicari : ')
+            tampilDataMobilDenganNamaYangSama(namaMobil)
+        elif(pilihan == '6'):
+            flag = 0
+            while True:
+                tahunMobil = input('Masukkan tahun mobil yang dicari : ')
+                if(tahunMobil.isdigit() and int(tahunMobil) > 1800 and int(tahunMobil) <= 2025):
+                    flag = 1
+                    break
+                else:
+                    print('Maaf, tahun yang anda masukkan tidak sesuai.')
+            if(flag == 1):
+                tampilDataMobilDenganTahunYangSama(tahunMobil)
+        elif(pilihan == '7'):
+            while True:
+                statusMobil = input('Status mobil yang dicari [Tersedia / Disewa] : ')
+                statusMobilLower = statusMobil.lower()
+                if(statusMobilLower == 'tersedia' or statusMobilLower == 'disewa'):
+                    tampilDataMobilDenganStatusYangSama(statusMobilLower)
+                    break
+                else:
+                    print('Maaf, status yang anda masukkan tidak sesuai.')
+        elif(pilihan == '8'):
+            break
+        else:
+            print('Maaf inputan yang anda masukkan tidak sesuai.')
+        if(flagKeluar == 1):
+            break
+
+def tampilDataMobilDenganMerkYangSama(merkMobil):
+    flag = 0
+    merkMobilLower = merkMobil.lower()
+    print(f'{'Index'}\t|{'Merk':<15}|{'Nama':<15}|{'Tahun'}\t|{'Plat':<11}|{'Harga Sewa/Hari':<15}|{'Status'}')
+    for i in range(len(listData)):
+        if(merkMobilLower == listData[i][0].lower()):
+            flag = 1
+            print(f'{i}\t|{listData[i][0]:<15}|{listData[i][1]:<15}|{listData[i][2]}\t|{listData[i][3]:<11}|{listData[i][4]:<15}|{listData[i][5]}')
+    if(flag == 0):
+        print(f'\nTidak ada data mobil dengan merk {merkMobil}.\n')
+
+def tampilDataMobilDenganNamaYangSama(namaMobil):
+    flag = 0
+    namaMobilLower = namaMobil.lower()
+    print(f'{'Index'}\t|{'Merk':<15}|{'Nama':<15}|{'Tahun'}\t|{'Plat':<11}|{'Harga Sewa/Hari':<15}|{'Status'}')
+    for i in range(len(listData)):
+        if(namaMobilLower == listData[i][1].lower()):
+            flag = 1
+            print(f'{i}\t|{listData[i][0]:<15}|{listData[i][1]:<15}|{listData[i][2]}\t|{listData[i][3]:<11}|{listData[i][4]:<15}|{listData[i][5]}')
+    if(flag == 0):
+        print(f'\nTidak ada data mobil dengan nama {namaMobil}.\n')
+
+def tampilDataMobilDenganTahunYangSama(tahunMobil):
+    flag = 0
+    print(f'{'Index'}\t|{'Merk':<15}|{'Nama':<15}|{'Tahun'}\t|{'Plat':<11}|{'Harga Sewa/Hari':<15}|{'Status'}')
+    for i in range(len(listData)):
+        if(tahunMobil == listData[i][2]):
+            flag = 1
+            print(f'{i}\t|{listData[i][0]:<15}|{listData[i][1]:<15}|{listData[i][2]}\t|{listData[i][3]:<11}|{listData[i][4]:<15}|{listData[i][5]}')
+    if(flag == 0):
+        print(f'\nTidak ada data mobil dengan tahun {tahunMobil}.\n')
+
+def tampilDataMobilDenganStatusYangSama(statusMobil):
+    flag = 0
+    print(f'{'Index'}\t|{'Merk':<15}|{'Nama':<15}|{'Tahun'}\t|{'Plat':<11}|{'Harga Sewa/Hari':<15}|{'Status'}')
+    for i in range(len(listData)):
+        if(statusMobil == listData[i][5].lower()):
+            flag = 1
+            print(f'{i}\t|{listData[i][0]:<15}|{listData[i][1]:<15}|{listData[i][2]}\t|{listData[i][3]:<11}|{listData[i][4]:<15}|{listData[i][5]}')
+    if(flag == 0):
+        print(f'\nTidak ada data mobil dengan status {statusMobil}.\n')
+
+def tampilDataBerdasarkanIndex():
+    flag1 = 0
+    while True:
+        inputUlang = ''
+        indexCari = input('Masukkan index dari data yang ingin dilihat : ')
+        if(indexCari.isdigit() == True and int(indexCari) < len(listData)):
+            indexCariINT = int(indexCari)
+            print(f'{'Index'}\t|{'Merk':<15}|{'Nama':<15}|{'Tahun'}\t|{'Plat':<11}|{'Harga Sewa/Hari':<15}|{'Status'}')
+            print(f'{indexCariINT}\t|{listData[indexCariINT][0]:<15}|{listData[indexCariINT][1]:<15}|{listData[indexCariINT][2]}\t|{listData[indexCariINT][3]:<11}|{listData[indexCariINT][4]:<15}|{listData[indexCariINT][5]}')
+            break
+        elif(indexCari.isdigit() == True and int(indexCari) >= len(listData)):
+            print('Maaf, data yang anda cari tidak ditemukan')
+            while True:
+                inputUlang = input('Apakah anda ingin mencari ulang? [ya / tidak] : ')
+                inputUlangLower = inputUlang.lower()
+                if(inputUlangLower == 'tidak'):
+                    flag1 = 1
+                    break
+                elif(inputUlangLower == 'ya'):
+                    break
+                else:
+                    print('Maaf inputan yang anda masukkan tidak sesuai.')
+            if(flag1 == 1):
+                break
+        else:
+            print('Maaf inputan yang anda masukkan tidak sesuai.')
+
+def tampilDataBerdasarkanPlat():
+    flag = 0
+    flag1 = 0
+    inputUlang = ''
+    validasiPlatMobilTDBP = 0
+    lihatLagi = ''
+    while True:
+        platMobilTDBP = input('Masukkan plat mobil dari data yang ingin dilihat : ')
+        validasiPlatMobilTDBP = cekInputanPlatMobil(platMobilTDBP)
+        if(validasiPlatMobilTDBP == 1):
+            for i in range(len(listData)):
+                if(platMobilTDBP == listData[i][3]):
+                    print(f'{'Index'}\t|{'Merk':<15}|{'Nama':<15}|{'Tahun'}\t|{'Plat':<11}|{'Harga Sewa/Hari':<15}|{'Status'}')
+                    print(f'{i}\t|{listData[i][0]:<15}|{listData[i][1]:<15}|{listData[i][2]}\t|{listData[i][3]:<11}|{listData[i][4]:<15}|{listData[i][5]}')
+                    flag = 1
+                    break
+            if(flag == 1):
+                break
+            else:
+                print('Maaf, data yang anda cari tidak ditemukan')
+                while True:
+                    inputUlang = input('Apakah anda ingin mencari ulang? [ya / tidak] : ')
+                    inputUlangLower = inputUlang.lower()
+                    if(inputUlangLower == 'tidak'):
+                        flag1 = 1
+                        break
+                    elif(inputUlangLower == 'ya'):
+                        break
+                    else:
+                        print('Maaf inputan yang anda masukkan tidak sesuai.')
+            if(flag1 == 1):
+                break
+
+def tampilSemuaData():
+    print(f'{'Index'}\t|{'Merk':<15}|{'Nama':<15}|{'Tahun'}\t|{'Plat':<11}|{'Harga Sewa/Hari':<15}|{'Status'}')
+    for i in range(len(listData)):
+        print(f'{i}\t|{listData[i][0]:<15}|{listData[i][1]:<15}|{listData[i][2]}\t|{listData[i][3]:<11}|{listData[i][4]:<15}|{listData[i][5]}')
+# =========================================================================
+
+# Menu 3
 def updateList():
     global listData
+    flag3 = 0
     while True:
         bagianYangdiUpdate = 0
         idxUpdtSTR = input('Silahkan pilih index data yang ingin diubah : ')
         if(idxUpdtSTR.isdigit() == True and int(idxUpdtSTR) < len(listData)):
             idxUpdtINT = int(idxUpdtSTR)
-            print('Merk\t|Nama\t|Tahun\t|Plat\t\t|Harga Sewa/Hari\t|Status')
-            print(f'{listData[idxUpdtINT][0]}\t|{listData[idxUpdtINT][1]}\t|{listData[idxUpdtINT][2]}\t|{listData[idxUpdtINT][3]}\t|{listData[idxUpdtINT][4]}\t\t\t|{listData[idxUpdtINT][5]}')
+            print(f'{'Merk':<15}|{'Nama':<15}|{'Tahun'}\t|{'Plat':<11}|{'Harga Sewa/Hari':<15}|{'Status'}')
+            print(f'{listData[idxUpdtINT][0]:<15}|{listData[idxUpdtINT][1]:<15}|{listData[idxUpdtINT][2]}\t|{listData[idxUpdtINT][3]:<11}|{listData[idxUpdtINT][4]:<15}|{listData[idxUpdtINT][5]}')
             dataUpdate = input('Pilih data mana yang ingin diUpdate : ')
-            dataUpdate.lower()
-            if(dataUpdate == 'merk'):
+            dataUpdateLower = dataUpdate.lower()
+            if(dataUpdateLower == 'merk'):
+                bagianYangdiUpdate = 0
+                hasilValiditas = 0
                 merkUpdate = ''
-                validasiDataBaru = ''
-                flag = 0
-                flag2 = 0
                 flag3 = 0
-                inputUlang = ''
                 while True:
                     merkUpdate = input('Masukan nama merk mobil yang baru : ')
-                    print('Merk\t|Nama\t|Tahun\t|Plat\t\t|Harga Sewa/Hari\t|Status')
-                    print(f'{merkUpdate}\t|{listData[idxUpdtINT][1]}\t|{listData[idxUpdtINT][2]}\t|{listData[idxUpdtINT][3]}\t|{listData[idxUpdtINT][4]}\t\t\t|{listData[idxUpdtINT][5]}')
-                    while True:
-                        validasiDataBaru = input('Apakah data yang anda isikan sudah benar? [ya / tidak] : ')
-                        if(validasiDataBaru == 'ya'):
-                            flag = 1
-                            flag3 = 1
-                            listData[idxUpdtINT][0] = merkUpdate
-                            break
-                        elif(validasiDataBaru == 'tidak'):
-                            while True:
-                                inputUlang = input('Apakah anda ingin memasukkan ulang? [ya / tidak] : ')
-                                if(inputUlang == 'ya'):
-                                    flag = 0
-                                    flag2 = 1
-                                    break
-                                elif(inputUlang == 'tidak'):
-                                    flag = 1
-                                    flag2 = 1
-                                    flag3 = 1
-                                    break
-                                else:
-                                    print('Maaf inputan yang anda masukkan tidak sesuai.')
-                        else:
-                            print('Maaf inputan yang anda masukkan tidak sesuai.')
-                        if(flag2 == 1):
-                            break
-                    if(flag == 1):
+                    print(f'{'Merk':<15}|{'Nama':<15}|{'Tahun'}\t|{'Plat':<11}|{'Harga Sewa/Hari':<15}|{'Status'}')
+                    print(f'{merkUpdate:<15}|{listData[idxUpdtINT][1]:<15}|{listData[idxUpdtINT][2]}\t|{listData[idxUpdtINT][3]:<11}|{listData[idxUpdtINT][4]:<15}|{listData[idxUpdtINT][5]}')
+                    hasilValiditas = fungsiValidasiDataBaru(idxUpdtINT, bagianYangdiUpdate, merkUpdate)
+                    if(hasilValiditas == 1):
+                        flag3 = 1
                         break
-            elif(dataUpdate == 'nama'):
+            elif(dataUpdateLower == 'nama'):
+                bagianYangdiUpdate = 1
+                hasilValiditas = 0
                 namaUpdate = ''
-                validasiDataBaru = ''
-                flag = 0
-                flag2 = 0
                 flag3 = 0
-                inputUlang = ''
                 while True:
                     namaUpdate = input('Masukan nama mobil yang baru : ')
-                    print('Merk\t|Nama\t|Tahun\t|Plat\t\t|Harga Sewa/Hari\t|Status')
-                    print(f'{listData[idxUpdtINT][0]}\t|{namaUpdate}\t|{listData[idxUpdtINT][2]}\t|{listData[idxUpdtINT][3]}\t|{listData[idxUpdtINT][4]}\t\t\t|{listData[idxUpdtINT][5]}')
-                    while True:
-                        validasiDataBaru = input('Apakah data yang anda isikan sudah benar? [ya / tidak] : ')
-                        if(validasiDataBaru == 'ya'):
-                            flag = 1
-                            flag3 = 1
-                            listData[idxUpdtINT][1] = namaUpdate
-                            break
-                        elif(validasiDataBaru == 'tidak'):
-                            while True:
-                                inputUlang = input('Apakah anda ingin memasukkan ulang? [ya / tidak] : ')
-                                if(inputUlang == 'ya'):
-                                    flag = 0
-                                    flag2 = 1
-                                    break
-                                elif(inputUlang == 'tidak'):
-                                    flag = 1
-                                    flag2 = 1
-                                    flag3 = 1
-                                    break
-                                else:
-                                    print('Maaf inputan yang anda masukkan tidak sesuai.')
-                        else:
-                            print('Maaf inputan yang anda masukkan tidak sesuai.')
-                        if(flag2 == 1):
-                            break
-                    if(flag == 1):
+                    print(f'{'Merk':<15}|{'Nama':<15}|{'Tahun'}\t|{'Plat':<11}|{'Harga Sewa/Hari':<15}|{'Status'}')
+                    print(f'{listData[idxUpdtINT][0]:<15}|{namaUpdate:<15}|{listData[idxUpdtINT][2]}\t|{listData[idxUpdtINT][3]:<11}|{listData[idxUpdtINT][4]:<15}|{listData[idxUpdtINT][5]}')
+                    hasilValiditas = fungsiValidasiDataBaru(idxUpdtINT, bagianYangdiUpdate, namaUpdate)
+                    if(hasilValiditas == 1):
+                        flag3 = 1
                         break
-            elif(dataUpdate == 'tahun'):
+            elif(dataUpdateLower == 'tahun'):
+                bagianYangdiUpdate = 2
                 tahunUpdate = ''
-                validasiDataBaru = ''
-                flag = 0
-                flag2 = 0
                 flag3 = 0
-                inputUlang = ''
                 while True:
                     tahunUpdate = input('Masukkan tahun keluaran mobil yang baru [cth : 2025] :')
                     panjangTahun = len(tahunUpdate)
@@ -521,35 +398,11 @@ def updateList():
                         if(tahunUpdate.isdigit() == True):
                             cekTahun = int(tahunUpdate)
                             if(cekTahun <= 2025):
-                                print('Merk\t|Nama\t|Tahun\t|Plat\t\t|Harga Sewa/Hari\t|Status')
-                                print(f'{listData[idxUpdtINT][0]}\t|{listData[idxUpdtINT][1]}\t|{tahunUpdate}\t|{listData[idxUpdtINT][3]}\t|{listData[idxUpdtINT][4]}\t\t\t|{listData[idxUpdtINT][5]}')
-                                while True:
-                                    validasiDataBaru = input('Apakah data yang anda isikan sudah benar? [ya / tidak] : ')
-                                    if(validasiDataBaru == 'ya'):
-                                        flag = 1
-                                        flag3 = 1
-                                        listData[idxUpdtINT][2] = tahunUpdate
-                                        break
-                                    elif(validasiDataBaru == 'tidak'):
-                                        while True:
-                                            inputUlang = input('Apakah anda ingin memasukkan ulang? [ya / tidak] : ')
-                                            if(inputUlang == 'ya'):
-                                                flag = 0
-                                                flag2 = 1
-                                                break
-                                            elif(inputUlang == 'tidak'):
-                                                flag = 1
-                                                flag2 = 1
-                                                flag3 = 1
-                                                break
-                                            else:
-                                                print('Maaf inputan yang anda masukkan tidak sesuai.')
-                                    else:
-                                        print('Maaf inputan yang anda masukkan tidak sesuai.')
-                                    if(flag2 == 1):
-                                        break
-                                if(flag == 1):
-                                    break
+                                print(f'{'Merk':<15}|{'Nama':<15}|{'Tahun'}\t|{'Plat':<11}|{'Harga Sewa/Hari':<15}|{'Status'}')
+                                print(f'{listData[idxUpdtINT][0]:<15}|{listData[idxUpdtINT][1]:<15}|{tahunUpdate}\t|{listData[idxUpdtINT][3]:<11}|{listData[idxUpdtINT][4]:<15}|{listData[idxUpdtINT][5]}')
+                                hasilValiditas = fungsiValidasiDataBaru(idxUpdtINT, bagianYangdiUpdate, tahunUpdate)
+                                flag3 = 1
+                                break
                             else:
                                 print('Maaf inputan "tahun keluaran mobil" yang anda masukkan tidak sesuai.')
                                 continue
@@ -559,38 +412,32 @@ def updateList():
                     else:
                         print('Maaf inputan "tahun keluaran mobil" yang anda masukkan tidak sesuai.')
                 break
-            elif(dataUpdate == 'plat'):
+            elif(dataUpdateLower == 'plat'):
                 bagianYangdiUpdate = 3
                 platUpdate = ''
                 validasiDataBaru1 = 0
-                flag = 0
-                flag2 = 0
                 flag3 = 0
-                inputUlang = ''
                 while True:
                     platUpdate = input('Masukkan plat mobil yang baru [cth : B 1234 CDE] : ')
-                    hasilCekPenulisanPlat = cekPlatMobilUpdt(platUpdate)
+                    hasilCekPenulisanPlat = cekInputanPlatMobil(platUpdate)
                     if(hasilCekPenulisanPlat == 1):
                         hasilCekDuplikatPlat = cekDuplikasiPlat(platUpdate)
                         if(hasilCekDuplikatPlat == 1):
-                            print('Merk\t|Nama\t|Tahun\t|Plat\t\t|Harga Sewa/Hari\t|Status')
-                            print(f'{listData[idxUpdtINT][0]}\t|{listData[idxUpdtINT][1]}\t|{listData[idxUpdtINT][2]}\t|{platUpdate}\t|{listData[idxUpdtINT][4]}\t\t\t|{listData[idxUpdtINT][5]}')
+                            print(f'{'Merk':<15}|{'Nama':<15}|{'Tahun'}\t|{'Plat':<11}|{'Harga Sewa/Hari':<15}|{'Status'}')
+                            print(f'{listData[idxUpdtINT][0]:<15}|{listData[idxUpdtINT][1]:<15}|{listData[idxUpdtINT][2]}\t|{platUpdate:<11}|{listData[idxUpdtINT][4]:<15}|{listData[idxUpdtINT][5]}')
                             validasiDataBaru1 = fungsiValidasiDataBaru(idxUpdtINT, bagianYangdiUpdate, platUpdate)
                     if(validasiDataBaru1 == 1):
                         flag3 = 1
                         break
-                    elif(validasiDataBaru1 == 2):
-                        flag3 = 1
-                        break
-            elif(dataUpdate == 'harga sewa/hari' or dataUpdate == 'harga'):
+            elif(dataUpdateLower == 'harga sewa/hari' or dataUpdateLower == 'harga'):
                 bagianYangdiUpdate = 4
                 hargaUpdate = ''
                 flag3 = 0
                 while True:
                     hargaUpdate = input('Masukkan harga sewa mobil per hari yang baru : ')
                     if(hargaUpdate.isdigit()):
-                        print('Merk\t|Nama\t|Tahun\t|Plat\t\t|Harga Sewa/Hari\t|Status')
-                        print(f'{listData[idxUpdtINT][0]}\t|{listData[idxUpdtINT][1]}\t|{listData[idxUpdtINT][2]}\t|{listData[idxUpdtINT][3]}\t|{hargaUpdate}\t\t\t|{listData[idxUpdtINT][5]}')
+                        print(f'{'Merk':<15}|{'Nama':<15}|{'Tahun'}\t|{'Plat':<11}|{'Harga Sewa/Hari':<15}|{'Status'}')
+                        print(f'{listData[idxUpdtINT][0]:<15}|{listData[idxUpdtINT][1]:<15}|{listData[idxUpdtINT][2]}\t|{listData[idxUpdtINT][3]:<11}|{hargaUpdate:<15}|{listData[idxUpdtINT][5]}')
                         fungsiValidasiDataBaru(idxUpdtINT, bagianYangdiUpdate, hargaUpdate)
                         flag3 = 1
                         break
@@ -623,7 +470,7 @@ def fungsiValidasiDataBaru(idxUpdtINT, bagianYangdiUpdate, inputanUpdate):
                     break
                 elif(inputUlang == 'tidak'):
                     flag = 1
-                    nilai = 2
+                    nilai = 1
                     break
                 else:
                     print('Maaf inputan yang anda masukkan tidak sesuai.')
@@ -632,7 +479,9 @@ def fungsiValidasiDataBaru(idxUpdtINT, bagianYangdiUpdate, inputanUpdate):
         if(flag == 1):
             break
     return nilai
+# =========================================================================
 
+# Menu 4
 def menuKe4():
     while True:
         hasilCek = 0
@@ -685,16 +534,16 @@ def deleteList():
                     print('Maaf, inputan yang anda masukkan tidak sesuai.')
         if(flag == 1):
             if(listData[indexHapusINT][5] == 'Tersedia'):
-                print('Merk\t|Nama\t|Tahun\t|Plat\t\t|Harga Sewa/Hari\t|Status')
-                print(f'{listData[indexHapusINT][0]}\t|{listData[indexHapusINT][1]}\t|{listData[indexHapusINT][2]}\t|{listData[indexHapusINT][3]}\t|{listData[indexHapusINT][4]}\t\t\t|{listData[indexHapusINT][5]}')
+                print(f'{'Merk':<15}|{'Nama':<15}|{'Tahun'}\t|{'Plat':<11}|{'Harga Sewa/Hari':<15}|{'Status'}')
+                print(f'{listData[indexHapusINT][0]:<15}|{listData[indexHapusINT][1]:<15}|{listData[indexHapusINT][2]}\t|{listData[indexHapusINT][3]:<11}|{listData[indexHapusINT][4]:<15}|{listData[indexHapusINT][5]}')
                 while True:
                     validasiHapus = input('Apakah anda yakin ingin menghapus data ini? [ya / tidak] : ')
-                    validasiHapus.lower()
-                    if(validasiHapus == 'ya'):
+                    validasiHapusLower = validasiHapus.lower()
+                    if(validasiHapusLower == 'ya'):
                         del listData[indexHapusINT]
                         flagKeluarDelete = 1
                         break
-                    elif(validasiHapus == 'tidak'):
+                    elif(validasiHapusLower == 'tidak'):
                         while True:
                             inputUlang = input('Apakah anda ingin memilih ulang data yang ingin dihapus? [ya / tidak] : ')
                             inputUlangLower = inputUlang.lower()
@@ -709,8 +558,8 @@ def deleteList():
                     else:
                         print('Maaf, inputan yang anda masukkan tidak sesuai.')
             elif(listData[indexHapusINT][5] == 'Disewa'):
-                print('Index\t|Merk\t|Nama\t|Tahun\t|Plat\t\t|Harga Sewa/Hari\t|Status')
-                print(f'{listData[indexHapusINT][0]}\t|{listData[indexHapusINT][1]}\t|{listData[indexHapusINT][2]}\t|{listData[indexHapusINT][3]}\t|{listData[indexHapusINT][4]}\t\t\t|{listData[indexHapusINT][5]}')
+                print(f'{'Index'}\t|{'Merk':<15}|{'Nama':<15}|{'Tahun'}\t|{'Plat':<11}|{'Harga Sewa/Hari':<15}|{'Status'}')
+                print(f'{indexHapusINT}\t|{listData[indexHapusINT][0]:<15}|{listData[indexHapusINT][1]:<15}|{listData[indexHapusINT][2]}\t|{listData[indexHapusINT][3]:<11}|{listData[indexHapusINT][4]:<15}|{listData[indexHapusINT][5]}')
                 print('Maaf, anda tidak dapat menghapus data ini, karena mobilnya sedang disewa.')
                 print('Jika terdapat kesalahan pada data, mohon diupdate data peminjaman terlebih dahulu.')
                 while True:
@@ -729,7 +578,6 @@ def deleteList():
 def deleteSemuaListMobil():
     global listData
     flagStatusMobil = 0
-    flagKeluar = 0
     while True:
         konfirmasi = input('Apakah anda yakin ingin menghapus semua data? [ya / tidak] : ')
         konfirmasiLower = konfirmasi.lower()
@@ -740,22 +588,6 @@ def deleteSemuaListMobil():
                     break
             if(flagStatusMobil == 1):
                 print('Mohon maaf, terdapat data yang sedang dalam status Disewa, sehingga tidak bisa dihapus')
-                # while True:
-                #     konfirmasiHapusTersedia = input('Apakah anda ingin menghapus semua yang berstatus Tersedia? [ya / tidak] : ')
-                #     konfirmasiHapusTersediaLower = konfirmasiHapusTersedia.lower()
-                #     if(konfirmasiHapusTersediaLower == 'ya'):
-                #         for j in range(len(listData)):
-                #             if(listData[j][5] == 'Tersedia'):
-                #                 del listData[j]
-                #         flagKeluar = 1
-                #         break
-                #     elif(konfirmasiHapusTersediaLower == 'tidak'):
-                #         flagKeluar = 1
-                #         break
-                #     else:
-                #         print('Maaf, inputan anda tidak sesuai.')
-                # if(flagKeluar == 1):
-                #     break
                 break
             elif(flagStatusMobil == 0):
                 listData.clear()
@@ -764,21 +596,9 @@ def deleteSemuaListMobil():
             break
         else:
             print('Maaf, inputan anda tidak sesuai.')
+# =========================================================================
 
-def cekDuplikasiNoKTP(NoKTP):
-    flag = 1
-    for i in range(len(listDataCustomer)):
-        if(NoKTP == listDataCustomer[i][2]):
-            print(f'''
-Nama    : {listDataCustomer[i][0]}
-Alamat  : {listDataCustomer[i][1]}
-No KTP  : {listDataCustomer[i][2]}''')
-            print('Mohon maaf, terdapat kesamaan nomor KTP dengan data pelanggan tersebut.')
-            print('Jika terdapat kesalahan pada data pelanggan tersebut, mohon update atau delete data tersebut terlebih dahulu')
-            flag = 0
-            break
-    return flag
-
+# Menu 5
 def menuKe5():
     global listDataCustomer
     while True:
@@ -846,7 +666,7 @@ def menuKe5():
                                 if(pilih == '1'):
                                     break
                                 elif(pilih == '2'):
-                                    flagKeluarInputKTP == 1
+                                    flagKeluarInputKTP = 1
                                     break
                                 elif(pilih == '3'):
                                     flagKeluarInputKTP = 1
@@ -933,7 +753,6 @@ No Ktp  : {noKTPCustomer}''')
                     if(noKTPCustomer == listDataCustomer[i][2]):
                         indexCustomer = i
                         return indexCustomer
-                        break
                 break
             elif(validasiDataLower == 'tidak'):
                 flag2 = 0
@@ -947,7 +766,6 @@ No Ktp  : {noKTPCustomer}''')
                         flagDisini = 1
                         flag2 = 1
                         return -1
-                        break
                     else:
                         print('Maaf, inputan anda tidak sesuai.')
             else:
@@ -956,7 +774,6 @@ No Ktp  : {noKTPCustomer}''')
                 break
         if(flag2 == 1):
             return -1
-            break
 
 def sewaMobil(indexCustomer):
     global listDataPeminjaman
@@ -987,8 +804,8 @@ def sewaMobil(indexCustomer):
                     if(pilihMobil.isdigit() and int(pilihMobil) < len(listData)):
                         pilihMobilInt = int(pilihMobil)
                         if(listData[pilihMobilInt][5] == 'Tersedia'):
-                            print('Index\t|Merk\t|Nama\t|Tahun\t|Plat\t\t|Harga Sewa/Hari\t|Status')
-                            print(f'{pilihMobilInt}\t|{listData[pilihMobilInt][0]}\t|{listData[pilihMobilInt][1]}\t|{listData[pilihMobilInt][2]}\t|{listData[pilihMobilInt][3]}\t|{listData[pilihMobilInt][4]}\t\t\t|{listData[pilihMobilInt][5]}')
+                            print(f'{'Index'}\t|{'Merk':<15}|{'Nama':<15}|{'Tahun'}\t|{'Plat':<11}|{'Harga Sewa/Hari':<15}|{'Status'}')
+                            print(f'{pilihMobilInt}\t|{listData[pilihMobilInt][0]:<15}|{listData[pilihMobilInt][1]:<15}|{listData[pilihMobilInt][2]}\t|{listData[pilihMobilInt][3]:<11}|{listData[pilihMobilInt][4]:<15}|{listData[pilihMobilInt][5]}')
                             while True:
                                 flagKonfirmasiPilihan = 0
                                 konfirmasiPilihan = input('Apakah benar mobil ini yang ingin disewa? [ya / tidak] : ')
@@ -1106,8 +923,8 @@ Total Pembayaran    : {totalBayar}''')
                                 else:
                                     print('Maaf, inputan anda tidak sesuai.')
                         elif(listData[pilihMobilInt][5] == 'Disewa'):
-                            print('Index\t|Merk\t|Nama\t|Tahun\t|Plat\t\t|Harga Sewa/Hari\t|Status')
-                            print(f'{pilihMobilInt}\t|{listData[pilihMobilInt][0]}\t|{listData[pilihMobilInt][1]}\t|{listData[pilihMobilInt][2]}\t|{listData[pilihMobilInt][3]}\t|{listData[pilihMobilInt][4]}\t\t\t|{listData[pilihMobilInt][5]}')
+                            print(f'{'Index'}\t|{'Merk':<15}|{'Nama':<15}|{'Tahun'}\t|{'Plat':<11}|{'Harga Sewa/Hari':<15}|{'Status'}')
+                            print(f'{pilihMobilInt}\t|{listData[pilihMobilInt][0]:<15}|{listData[pilihMobilInt][1]:<15}|{listData[pilihMobilInt][2]}\t|{listData[pilihMobilInt][3]:<11}|{listData[pilihMobilInt][4]:<15}|{listData[pilihMobilInt][5]}')
                             print('Maaf, mobil ini sedang disewa, sehingga tidak bisa menyewa mobil ini')
                             print('Jika terdapat kesalahan, mohon update datanya.')
                             while True:
@@ -1122,6 +939,7 @@ Total Pembayaran    : {totalBayar}''')
                                     print('Maaf, inputan anda tidak sesuai.')
                         if(flagAkhir == 1):
                             break
+# =========================================================================
 
 # Menu ke 6
 def menuKe6():
@@ -1392,12 +1210,12 @@ def hapusDataPelangganIndex():
                 print(f'{listDataCustomer[indexHapusINT][0]}\t|{listDataCustomer[indexHapusINT][1]}\t|{listDataCustomer[indexHapusINT][2]}')
                 while True:
                     validasiHapus = input('Apakah anda yakin ingin menghapus data ini? [ya / tidak] : ')
-                    validasiHapus.lower()
-                    if(validasiHapus == 'ya'):
+                    validasiHapusLower = validasiHapus.lower()
+                    if(validasiHapusLower == 'ya'):
                         del listDataCustomer[indexHapusINT]
                         flagKeluarDelete = 1
                         break
-                    elif(validasiHapus == 'tidak'):
+                    elif(validasiHapusLower == 'tidak'):
                         while True:
                             inputUlang = input('Apakah anda ingin memilih ulang data yang ingin dihapus? [ya / tidak] : ')
                             inputUlangLower = inputUlang.lower()
@@ -1480,7 +1298,7 @@ def tampilDataPeminjamanBerdasarkanPlatMobil():
         platKetemu = 0
         flag = 0
         inputanPlatMobil = input('Masukkan plat mobil untuk data yang dicari : ')
-        hasilCek = cekPlatMobilUpdt(inputanPlatMobil)
+        hasilCek = cekInputanPlatMobil(inputanPlatMobil)
         if(hasilCek == 1):
             for i in range(len(listDataPeminjaman)):
                 if(inputanPlatMobil == listDataPeminjaman[i][5]):
@@ -1520,6 +1338,7 @@ def tampilDataPeminjamanBerdasarkanNoKTP():
                 break
             if(flag == 1):
                 break
+# =========================================================================================
 
 # Menu 6 Submenu 5
 def menuHapusDataPeminjaman():
@@ -1573,8 +1392,8 @@ def hapusDataPeminjamanIndex():
             while True:
                 flagPinjamanLain = 0
                 validasiHapus = input('Apakah anda yakin ingin menghapus data ini dan pelanggan sudah selesai waktunya dalam menyewa mobil? [ya / tidak] : ')
-                validasiHapus.lower()
-                if(validasiHapus == 'ya'):
+                validasiHapusLower = validasiHapus.lower()
+                if(validasiHapusLower == 'ya'):
                     for i in range(len(listDataPeminjaman)):
                         if(listDataPeminjaman[indexHapusINT][1] == listDataPeminjaman[i][1] and listDataPeminjaman[indexHapusINT][5] != listDataPeminjaman[i][5]):
                             flagPinjamanLain = 1
@@ -1590,7 +1409,7 @@ def hapusDataPeminjamanIndex():
                     del listDataPeminjaman[indexHapusINT]
                     flagKeluarDelete = 1
                     break
-                elif(validasiHapus == 'tidak'):
+                elif(validasiHapusLower == 'tidak'):
                     while True:
                         inputUlang = input('Apakah anda ingin memilih ulang data yang ingin dihapus? [ya / tidak] : ')
                         inputUlangLower = inputUlang.lower()
@@ -1606,6 +1425,7 @@ def hapusDataPeminjamanIndex():
                     print('Maaf, inputan yang anda masukkan tidak sesuai.')
         if(flagKeluarDelete == 1):
             break
+# =========================================================================================
 
 inputan = ''
 
